@@ -22,8 +22,7 @@ def post():
                             if (len(data['description']) >= 1):
                                 if (len(data['start-date']) >= 1):
                                     if (len(data['end-date']) >= 1):
-                                        with open('../_posts/' + str(data['id']) + '.json', 'w') as jsonFile:
-                                            json.dump(data, jsonFile)
+                                        write(data)
                                         print(data)
                                         return { "status": 200, "content": "OK" }, 200
                                     else:
@@ -44,6 +43,10 @@ def post():
             return { "status": 403, "type": "missing.api.key" }, 403
     except:
         return { "status": 500, "content": "Request cancelled - An error has occured. Please contact us at contact@constellate.pro"}, 500
+
+def write(data):
+    with open('../_posts/' + str(data['id']) + '.md', 'w') as fp:
+        fp.write('---\nlayout: post\ntitle: "' + data['title'] + '"\ndescription: "' + data['description'] + '"\ntags: [demo]\n---')
 
 
 if __name__ == "__main__":
