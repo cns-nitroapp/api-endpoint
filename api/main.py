@@ -17,18 +17,33 @@ def post():
         if ('authorization' in data):
             if (data['authorization'] == 'demo'):
                 if ('id' in data):
-                    with open('../_posts/' + data['id'] + '.json', 'w') as jsonFile:
-                        json.dump(data, jsonFile)
-                    print(data)
-                    return data
+                    if (type(data['id']) == int):
+                        if (len(data['title']) >= 1):
+                            if (len(data['description']) >= 1):
+                                if (len(data['start-date']) >= 1):
+                                    if (len(data['end-date']) >= 1):
+                                        with open('../_posts/' + str(data['id']) + '.json', 'w') as jsonFile:
+                                            json.dump(data, jsonFile)
+                                        print(data)
+                                        return { "status": 200, "content": "OK" }, 200
+                                    else:
+                                        return { "status": 403, "type": "invalid.end.date" }, 403
+                                else:
+                                    return { "status": 403, "type": "invalid.start.date" }, 403
+                            else:
+                                return { "status": 403, "type": "invalid.description" }, 403
+                        else:
+                            return { "status": 403, "type": "invalid.title" }, 403
+                    else:
+                        return { "status": 403, "type": "invalid.post.id" }, 403
                 else:
-                    return { "status": "403", "response": "Request cancelled - Missing Post ID" }, 403
+                    return { "status": 403, "type": "missing.post.id" }, 403
             else:
-                return { "status": "400", "response": "Request cancelled - Invalid API Key" }, 400
+                return { "status": 400, "type": "invalid.api.key" }, 400
         else:
-            return { "status": "403", "response": "Request cancelled - No API Key" }, 403
+            return { "status": 403, "type": "missing.api.key" }, 403
     except:
-        return { "status": "500", "response": "Request cancelled - An error has occured. Please contact us at contact@constellate.pro"}, 500
+        return { "status": 500, "content": "Request cancelled - An error has occured. Please contact us at contact@constellate.pro"}, 500
 
 
 if __name__ == "__main__":
