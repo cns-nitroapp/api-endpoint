@@ -53,11 +53,11 @@ def getagent(agent):
 
 def write(data, agent):
     with open('../_posts/' + str(data['id']) + '.md', 'w') as fp:
-        content = '---\nlayout: post\ntitle: "' + data['title'] + '"\nauthor: [' + agent + ']\n---\n' + data['description']
+        content = '---\nlayout: post\ntitle: "' + data['title'] + '"\nauthor: [' + agent + ']\nstart-date: "' + data['start-date'] + '"\nend-date: "' + data['end-date'] + '"\n---\n' + data['description']
         fp.write(content)
-        github(str(data['id']), content)
+        github(str(data['id']), content, data['start-date'])
 
-def github(id, content):
+def github(id, content, start):
     g = Github('') #PERSONAL_ACCESS TOKEN HERE
 
     org = g.get_organization('cns-nitroapp')
@@ -76,7 +76,7 @@ def github(id, content):
 
     # Upload to github
     git_prefix = '_posts/'
-    git_file = git_prefix + '2021-09-02-' + id + '.md'
+    git_file = git_prefix + start + '-' + id + '.md'
     if git_file in all_files:
         contents = repo.get_contents(git_file)
         repo.update_file(contents.path, "committing files", content, contents.sha, branch="main")
